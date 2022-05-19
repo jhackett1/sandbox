@@ -13,15 +13,17 @@ const Cell = ({ row, col, i, j, editing, setEditing, trRef }) => {
   const handleKeyUp = useCallback(
     (e: KeyboardEvent) => {
       const goLeft = () =>
-        (trRef?.current?.children?.[j - 1] || tdRef?.current).focus()
+        (trRef?.current?.children?.[j] || tdRef?.current).focus()
       const goRight = () =>
-        (trRef?.current?.children?.[j + 1] || tdRef?.current).focus()
+        (trRef?.current?.children?.[j + 2] || tdRef?.current).focus()
       const goUp = () =>
         (
-          trRef?.current?.previousSibling?.children?.[j] ?? tdRef.current
+          trRef?.current?.previousSibling?.children?.[j + 1] ?? tdRef.current
         ).focus()
       const goDown = () =>
-        (trRef?.current?.nextSibling?.children?.[j] ?? tdRef?.current).focus()
+        (
+          trRef?.current?.nextSibling?.children?.[j + 1] ?? tdRef?.current
+        ).focus()
 
       switch (e.key) {
         case "Enter":
@@ -125,6 +127,8 @@ const Row = ({ cols, row, i, editing, setEditing, style }) => {
 
   return (
     <tr ref={trRef} style={style}>
+      <th scope="row">{i}</th>
+
       {cols.map((col, j) => (
         <Cell
           key={`${i}-${j}`}
@@ -145,7 +149,6 @@ const Table = ({ cols, rows }) => {
   const [editing, setEditing] = useState<[number, number] | null>(null)
 
   const tableRef = useRef<HTMLTableElement | null>(null)
-  // const tbodyRef = useRef<HTMLTableSectionElement | null>(null)
 
   const handleClick = e => {
     if (!tableRef.current.contains(e.target)) setEditing(null)
@@ -169,7 +172,7 @@ const Table = ({ cols, rows }) => {
           {virtualItems.length} rows of {rows.length}
         </dd>
         <dt>Focused element</dt>
-        <dd>{document.activeElement.outerHTML.slice(0, 300)}</dd>
+        <dd>{document.activeElement.outerHTML.slice(0, 100)}</dd>
         <dt>Cell being edited</dt>
         <dd>{JSON.stringify(editing)}</dd>
       </dl>
@@ -179,6 +182,8 @@ const Table = ({ cols, rows }) => {
       <table ref={tableRef}>
         <thead>
           <tr>
+            <th scope="col"></th>
+
             {cols.map(col => (
               <th scope="col" key={col}>
                 <div>{col}</div>
@@ -192,14 +197,14 @@ const Table = ({ cols, rows }) => {
             height: `${totalSize}px`,
           }}
         >
-          {virtualItems.map((vItem, i) => (
+          {virtualItems.map(vItem => (
             <Row
               key={vItem.index}
-              i={i}
+              i={vItem.index}
               editing={editing}
               setEditing={setEditing}
               cols={cols}
-              row={rows[i]}
+              row={rows[vItem.index]}
               style={{
                 height: `${vItem.size}px`, // NEEDED
                 transform: `translateY(${vItem.start}px)`, // NEEDED
@@ -214,8 +219,6 @@ const Table = ({ cols, rows }) => {
   )
 }
 
-const App = () => (
-  <Table cols={Object.keys(data[0])} rows={data.slice(0, 1000)} />
-)
+const App = () => <Table cols={Object.keys(data[0])} rows={data} />
 
 export default App

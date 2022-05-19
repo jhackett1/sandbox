@@ -1,3 +1,6 @@
+
+$cellWidth: 200px;
+
 // basic layout
 *{
   box-sizing: border-box;
@@ -5,7 +8,7 @@
 }
 
 table{
-  width: 100%;
+  max-width: 800px;
   border: 1px solid black;
   display: block;
   height: 400px;
@@ -13,14 +16,25 @@ table{
 }
 
 thead{
-  display: block;
+  display: flex;
   position: sticky;
   top: 0;
   z-index: 2; // appear above body cells
 
+
   tr{
     display: flex; 
-    width: 100%;
+
+    & > th{
+      box-shadow: 0px 3px 3px rgba(0,0,0,0.1);
+      
+      &:first-child{
+        position: sticky;
+        left: 0;
+        box-shadow: none;
+      }
+    }
+    
   }
 }
 
@@ -30,29 +44,36 @@ tbody{
 
   tr{
     display: flex;
-    width: 100%;
     position: absolute;
     top: 0;
     left: 0;
+
+    & > th:first-child{
+      position: sticky;
+      left: 0;
+      box-shadow: 5px 0px 5px rgba(0,0,0,0.1);
+    }
   }
 }
 
 th, td{
   background: white;
-  width: 25%;
   border: 1px solid black;
+  width: $cellWidth;
+  text-align: left;
 
   div, input{
     display: block;
     padding: 10px;
     width: 100%;
+    height: 100%;
     cursor: default;
   }
 
   input{
     border: none;
     font-size: 1rem;
-    background: rgba(0,0,0,0.1);
+    background: transparentize(blue, 0.9);
     color: rgba(0,0,0,0.9)
   }
 } 
@@ -77,8 +98,8 @@ dl{
 
 // cell focus
 td:focus, td:focus-within{
-  outline: 2px solid blue;
-
+  outline: 3px solid blue;
+  outline-offset: -3px;
   input{
     outline: none;
   }
