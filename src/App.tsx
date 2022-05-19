@@ -49,20 +49,28 @@ const Cell = ({ row, col, i, j, editing, setEditing, trRef }) => {
           setEditing(null)
           break
         case "ArrowUp":
-          e.preventDefault() // prevent default scrolling behaviour
-          goUp()
+          if (!editing) {
+            e.preventDefault() // prevent default scrolling behaviour
+            goUp()
+          }
           break
         case "ArrowDown":
-          e.preventDefault()
-          goDown()
+          if (!editing) {
+            e.preventDefault()
+            goDown()
+          }
           break
         case "ArrowLeft":
-          e.preventDefault()
-          goLeft()
+          if (!editing) {
+            e.preventDefault()
+            goLeft()
+          }
           break
         case "ArrowRight":
-          e.preventDefault()
-          goRight()
+          if (!editing) {
+            e.preventDefault()
+            goRight()
+          }
           break
       }
     },
